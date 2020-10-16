@@ -32,7 +32,9 @@ set(SOURCES
     src/gl_renderer.cpp
     src/window.cpp
     src/mesh.cpp
-    src/mesh_loader.cpp)
+    src/mesh_loader.cpp
+    src/attribute.cpp
+    src/gl_rendering_target.cpp)
 
 add_compile_definitions(OPENGL_DEMO=${TITLE})
 add_executable(${PROJECT_NAME}

@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "attribute.h"
 #include "mesh_loader.h"
 #include "window.h"
 
@@ -31,16 +32,18 @@ private:
     ///> vertices or indices number
     std::vector<GLsizei> target_sizes;
     GLuint               vao_;
-    GLuint               vao_binding_counter_;
+    GLuint               vap_binding_counter_;
 
     /**
-     * @brief CreateVbo
-     * @param mesh
-     * @return number of created vbo
+     * @brief CreateAndBindVertexBufferObjects Processes rendering targets
+     * @param vao_name Vertex array object name for vertex buffer objects be
+     * binded
+     * @param vad pointer to Vertex Attribute Data object
+     * @param ds Drawing specification for rendering targets
      */
-    size_t CreateVbo(const Mesh& mesh);
-    void   BindVbo(const Mesh& mesh, size_t vbo_count,
-                   GLuint vao_counter_before_vbo_creation);
+    void CreateAndBindVertexBufferObjects(const GLuint&              vao_name,
+                                          const VertexAttributeData* vad,
+                                          DrawingSpec                ds);
 
     void CookShaderProgram(const Mesh& mesh);
 };

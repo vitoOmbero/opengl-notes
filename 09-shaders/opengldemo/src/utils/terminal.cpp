@@ -12,6 +12,11 @@ void Terminal::ReportErr(std::string_view msg)
     std::cerr << msg << std::endl;
 }
 
+void Terminal::ReportErr(void* msg)
+{
+    std::cerr << msg << std::endl;
+}
+
 void Terminal::ReportMsg(std::string_view msg)
 {
     std::cout << msg << std::endl;

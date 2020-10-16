@@ -38,6 +38,7 @@
 					<Add option="-DOPENGL_DEMO=Scene with one object"/>
 					<Add option="-DKEY_INPUT_VERBOSE"/>
 					<Add option="-DSCENE_VERBOSE"/>
+					<Add option="-DRENDERER_VERBOSE"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/include"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/src"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src"/>
@@ -67,6 +68,7 @@
 					<Add option="-DOPENGL_DEMO=Scene with one object"/>
 					<Add option="-DKEY_INPUT_VERBOSE"/>
 					<Add option="-DSCENE_VERBOSE"/>
+					<Add option="-DRENDERER_VERBOSE"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/include"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/src"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src"/>
@@ -173,25 +175,25 @@
 		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src/glfw_config.h">
 			<Option target="glfw"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/CMakeLists.txt">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/../../00-libs/glfw-3.3.2/CMakeLists.txt">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/../../00-libs/glfw-3.3.2/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\..\..\00-libs\glfw-3.3.2\"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/../../00-libs/glfw-3.3.2/cmake_uninstall.cmake.in">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/../../00-libs/glfw-3.3.2/cmake_uninstall.cmake.in">
 			<Option virtualFolder="CMake Files\..\..\00-libs\glfw-3.3.2\"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/../../00-libs/glfw-3.3.2/src/CMakeLists.txt">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/../../00-libs/glfw-3.3.2/src/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\..\..\00-libs\glfw-3.3.2\src\"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/../../00-libs/glfw-3.3.2/src/glfw3.pc.in">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/../../00-libs/glfw-3.3.2/src/glfw3.pc.in">
 			<Option virtualFolder="CMake Files\..\..\00-libs\glfw-3.3.2\src\"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/../../00-libs/glfw-3.3.2/src/glfw3Config.cmake.in">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/../../00-libs/glfw-3.3.2/src/glfw3Config.cmake.in">
 			<Option virtualFolder="CMake Files\..\..\00-libs\glfw-3.3.2\src\"/>
 		</Unit>
-		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/08-quad/opengldemo/../../00-libs/glfw-3.3.2/src/glfw_config.h.in">
+		<Unit filename="/home/vito/repos/gd/opengl/opengl-good-intro/09-shaders/opengldemo/../../00-libs/glfw-3.3.2/src/glfw_config.h.in">
 			<Option virtualFolder="CMake Files\..\..\00-libs\glfw-3.3.2\src\"/>
 		</Unit>
 	</Project>

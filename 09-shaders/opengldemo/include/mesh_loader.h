@@ -3,12 +3,8 @@
 
 #include "vector"
 
+#include "demo_assets.h"
 #include "mesh.h"
-
-enum class DemoAssets
-{
-    kSimpleTriangle
-};
 
 class MeshLoader
 {

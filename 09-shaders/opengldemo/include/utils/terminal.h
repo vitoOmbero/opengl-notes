@@ -16,6 +16,7 @@ public:
     };
     static void PrintBorderedText(const char filler, std::string_view msg);
     static void ReportErr(std::string_view msg);
+    static void ReportErr(void* msg);
     static void ReportMsg(std::string_view msg);
 
 private:
