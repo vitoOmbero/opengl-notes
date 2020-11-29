@@ -8,9 +8,12 @@
 #include <iostream>
 #include <sstream>
 
+#include "utils/sequence_generator.h"
+
 namespace demo::assets::SimpleTriangle
 {
-
+static uint32_t id = gRenderingTargetIdGen.getNext();
+using namespace gl_rendering_target;
 // former TriangleObjectPureLayout
 
 static float data[] // clang-format off
@@ -20,17 +23,13 @@ static float data[] // clang-format off
         };
 // clang-format on
 
-static AttributeDataPack adp{ /*data*/ reinterpret_cast<char*>(data),
-                              /*n_vertices*/ 3,
-                              /*layout*/ AttributeDataLayout::kContiguous,
-                              /*associated_vap_n*/ 1 };
+static VertexDataPointer vdp = VertexDataPointer(id, 3, data);
 
-static VertexAttributePack vap{ GL_FLOAT };
+static AttributePackSpecification aps =
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kContiguous,
+                               attribute::Scheme::kPosition3d);
 
-static VertexAttributeData vad{
-    &adp, &vap, { attribute::Scheme::kPosition3d },
-    1,    1,    VertexAttributeData::CompositionCase::k11
-};
+static RenderingTargetPackPointer rtpp{ &vdp, &aps, 1, 1 };
 
 const char* v_shader_src_path =
     "assets/shaders/demo/simple/simple_triangle.v.glsl";
@@ -40,6 +39,9 @@ const char* f_shader_src_path =
 
 namespace demo::assets::SimpleTriangleInterleaved
 {
+static uint32_t id = gRenderingTargetIdGen.getNext();
+using namespace gl_rendering_target;
+
 // former TriangleObjectPureLayout
 static float data[] // clang-format off
         /*data self*/ { 0.f,  0.5f, 0.f,	/* Top   */   1.f, 0.f, 0.f, /*Red channel*/
@@ -48,26 +50,19 @@ static float data[] // clang-format off
         };
 // clang-format on
 
-static AttributeDataPack adp{ reinterpret_cast<char*>(data), 3,
-                              AttributeDataLayout::kInterleaved, 1 };
+static VertexDataPointer vdp = VertexDataPointer(id, 3, data);
 
-static VertexAttributePack vap[]{
-    /*[0] - positions*/
-    { GL_FLOAT,
-      /*stride*/ 6 * (GLsizei)SizeOfGlTypeByGLenum(GL_FLOAT) },
-    /*[1] - colors*/
-    { GL_FLOAT,
-      /*stride*/ 6 * (GLsizei)SizeOfGlTypeByGLenum(GL_FLOAT),
-      /*offset*/ (GLfloat*)(sizeof(GLfloat) * 3) }
+static AttributePackSpecification aps[] = {
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kInterleaved,
+                               attribute::Scheme::kPosition3d, nullptr,
+                               6 * (GLsizei)SizeOfGlTypeByGLenum(GL_FLOAT)),
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kInterleaved,
+                               attribute::Scheme::kColorRgb,
+                               (GLfloat*)(sizeof(GLfloat) * 3),
+                               6 * (GLsizei)SizeOfGlTypeByGLenum(GL_FLOAT))
 };
 
-static VertexAttributeData vad{ &adp,
-                                vap,
-                                { attribute::Scheme::kPosition3d,
-                                  attribute::Scheme::kColorRgb },
-                                /*n_adp*/ 1,
-                                /*n_vap*/ 2,
-                                VertexAttributeData::CompositionCase::k1N };
+static RenderingTargetPackPointer rtpp{ &vdp, aps, 1, 2 };
 
 const char* v_shader_src_path =
     "assets/shaders/demo/simple_interleaved/simple_triangle.v.glsl";
@@ -77,6 +72,8 @@ const char* f_shader_src_path =
 
 namespace demo::assets::SimpleTriangleContiguous
 {
+static uint32_t id = gRenderingTargetIdGen.getNext();
+using namespace gl_rendering_target;
 // former TriangleObjectPureLayout - 2 vbo for one triangle (2 rendering
 // targets)
 static float vertex_position_data[] // clang-format off
@@ -93,23 +90,17 @@ static float vertex_color_data[] // clang-format off
         };
 // clang-format on
 
-static AttributeDataPack adp[]{ { reinterpret_cast<char*>(vertex_position_data),
-                                  3, AttributeDataLayout::kContiguous, 1 },
-                                { reinterpret_cast<char*>(vertex_color_data), 3,
-                                  AttributeDataLayout::kContiguous,
-                                  /*assoc_vap_n*/ 1 } };
+static VertexDataPointer vdp[]{ VertexDataPointer(id, 3, vertex_position_data),
+                                VertexDataPointer(id, 3, vertex_color_data) };
 
-static VertexAttributePack vap[]{
-    /*[0] - positions*/ { GL_FLOAT }, /*[1] - colors*/ { GL_FLOAT }
-}; // namespace demo::assets::SimpleTriangleContiguous
+static AttributePackSpecification aps[] = {
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kContiguous,
+                               attribute::Scheme::kPosition3d),
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kContiguous,
+                               attribute::Scheme::kColorRgb)
+};
 
-static VertexAttributeData vad{ adp,
-                                vap,
-                                { attribute::Scheme::kPosition3d,
-                                  attribute::Scheme::kColorRgb },
-                                /*n_adp*/ 2,
-                                /*n_vap*/ 2,
-                                VertexAttributeData::CompositionCase::kArr };
+static RenderingTargetPackPointer rtpp{ vdp, aps, 2, 2 };
 
 // shaders are the same as for SimpleTriangleInterleaved
 const char* v_shader_src_path =
@@ -120,6 +111,9 @@ const char* f_shader_src_path =
 
 namespace demo::assets::SimpleQuadUnindexed
 {
+static uint32_t id = gRenderingTargetIdGen.getNext();
+using namespace gl_rendering_target;
+
 const char* v_shader_src_path =
     "assets/shaders/demo/simple_indices/simple_tr_for_quad.v.glsl";
 const char* f_shader_src_path =
@@ -139,26 +133,27 @@ static float data[] // clang-format off
         };
 // clang-format on
 
-static AttributeDataPack adp{ reinterpret_cast<char*>(data), 3 + 3,
-                              AttributeDataLayout::kInterleaved, 1 };
+static VertexDataPointer vdp = VertexDataPointer(id, 3 + 3, data);
 
-VertexAttributePack vap{ GL_FLOAT };
+static AttributePackSpecification aps =
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kInterleaved,
+                               attribute::Scheme::kPosition3d);
 
-static VertexAttributeData vad{
-    &adp, &vap, { attribute::Scheme::kPosition3d },
-    1,    1,    VertexAttributeData::CompositionCase::k11
-};
+static RenderingTargetPackPointer rtpp{ &vdp, &aps, 1, 1 };
 
 } // namespace demo::assets::SimpleQuadUnindexed
 
 namespace demo::assets::SimpleQuadIndexed
 {
+static uint32_t id = gRenderingTargetIdGen.getNext();
+using namespace gl_rendering_target;
+
 const char* v_shader_src_path =
     "assets/shaders/demo/simple_indices/simple_tr_for_quad.v.glsl";
 const char* f_shader_src_path =
     "assets/shaders/demo/simple_indices/simple_tr_for_ind_quad.f.glsl";
 
-static float v_data[] // clang-format off
+static GLfloat v_data[] // clang-format off
         /*data self*/ {
 		-0.5f,  0.5f, 0.0f,		// Top left
 		 0.5f,  0.5f, 0.0f,		// Top right
@@ -166,28 +161,20 @@ static float v_data[] // clang-format off
 		-0.5f, -0.5f, 0.0f		// Bottom left 
         };
 
-static int i_data[] = {
+static GLuint i_data[] = {
 		0, 1, 2,  // First Triangle
 		0, 2, 3   // Second Triangle
 	};
 // clang-format on
 
-static AttributeDataPack adp{ reinterpret_cast<char*>(v_data),
-                              3 + 1,
-                              AttributeDataLayout::kInterleaved,
-                              1,
-                              false,
-                              0,
-                              GL_UNSIGNED_INT,
-                              6,
-                              reinterpret_cast<char*>(i_data) };
+static VertexDataPointer vdp =
+    VertexDataPointer(id, 4, v_data, 6, GL_UNSIGNED_INT, i_data);
 
-VertexAttributePack vap{GL_FLOAT};
+static AttributePackSpecification aps =
+    AttributePackSpecification(id, GL_FLOAT, AttributeDataLayout::kContiguous,
+                               attribute::Scheme::kPosition3d);
 
-static VertexAttributeData vad{
-    &adp, &vap, { attribute::Scheme::kPosition3d },
-    1,    1,    VertexAttributeData::CompositionCase::k11
-};
+static RenderingTargetPackPointer rtpp{ &vdp, &aps, 1, 1 };
 
 } // namespace demo::assets::SimpleQuadIndexed
 
@@ -206,11 +193,8 @@ void MeshLoader::Load(DemoAssets demo_asset)
         {
             using namespace SimpleTriangle;
 
-            std::string vsrc = FileToString(v_shader_src_path);
-            std::string fsrc = FileToString(f_shader_src_path);
-
-            Mesh simple_triangle(&vad, vsrc, fsrc);
-            meshes.push_back(simple_triangle);
+            meshes.emplace_back(&rtpp, FileToString(v_shader_src_path),
+                                FileToString(f_shader_src_path));
             break;
         }
 
@@ -218,22 +202,16 @@ void MeshLoader::Load(DemoAssets demo_asset)
         {
             using namespace SimpleTriangleInterleaved;
 
-            std::string vsrc = FileToString(v_shader_src_path);
-            std::string fsrc = FileToString(f_shader_src_path);
-
-            Mesh simple_triangle(&vad, vsrc, fsrc);
-            meshes.push_back(simple_triangle);
+            meshes.emplace_back(&rtpp, FileToString(v_shader_src_path),
+                                FileToString(f_shader_src_path));
             break;
         }
         case DemoAssets::kSimpleTriangle_2vbo_2att_Contiguous:
         {
             using namespace SimpleTriangleContiguous;
 
-            std::string vsrc = FileToString(v_shader_src_path);
-            std::string fsrc = FileToString(f_shader_src_path);
-
-            Mesh simple_triangle(&vad, vsrc, fsrc);
-            meshes.push_back(simple_triangle);
+            meshes.emplace_back(&rtpp, FileToString(v_shader_src_path),
+                                FileToString(f_shader_src_path));
             break;
         }
 
@@ -241,11 +219,8 @@ void MeshLoader::Load(DemoAssets demo_asset)
         {
             using namespace SimpleQuadUnindexed;
 
-            std::string vsrc = FileToString(v_shader_src_path);
-            std::string fsrc = FileToString(f_shader_src_path);
-
-            Mesh simple_triangle(&vad, vsrc, fsrc);
-            meshes.push_back(simple_triangle);
+            meshes.emplace_back(&rtpp, FileToString(v_shader_src_path),
+                                FileToString(f_shader_src_path));
             break;
         }
 
@@ -253,11 +228,8 @@ void MeshLoader::Load(DemoAssets demo_asset)
         {
             using namespace SimpleQuadIndexed;
 
-            std::string vsrc = FileToString(v_shader_src_path);
-            std::string fsrc = FileToString(f_shader_src_path);
-
-            Mesh simple_triangle(&vad, vsrc, fsrc);
-            meshes.push_back(simple_triangle);
+            meshes.emplace_back(&rtpp, FileToString(v_shader_src_path),
+                                FileToString(f_shader_src_path));
             break;
         }
 

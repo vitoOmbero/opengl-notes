@@ -40,6 +40,8 @@ add_executable(${PROJECT_NAME}
 SET(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL REQUIRED)
 
+find_package(GLEW REQUIRED)
+
 if(DEBUG)
     if(VERBOSE_DEBUG)
         add_compile_definitions(KEY_INPUT_VERBOSE)

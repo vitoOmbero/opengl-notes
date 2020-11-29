@@ -2,6 +2,7 @@
 
 #include "demo.h"
 #include "utils/macro_as_text.inc"
+#include "utils/sequence_generator.h"
 #include "utils/terminal.h"
 
 void AtExit()

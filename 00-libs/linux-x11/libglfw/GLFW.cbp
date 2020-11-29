@@ -4,7 +4,7 @@
 	<Project>
 		<Option title="GLFW"/>
 		<Option makefile_is_custom="1"/>
-		<Option compiler="clang"/>
+		<Option compiler="gcc"/>
 		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\00-libs\;CMake Files\..\..\00-libs\glfw-3.3.2\;CMake Files\..\..\00-libs\glfw-3.3.2\src\;"/>
 		<Build>
 			<Target title="all">
@@ -32,21 +32,22 @@
 				<Option working_dir="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
-				<Option compiler="clang"/>
+				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-D_GLFW_USE_CONFIG_H"/>
 					<Add option="-DOPENGL_DEMO=Scene with one object"/>
+					<Add option="-DGL_DEMO_DEBUG"/>
 					<Add option="-DKEY_INPUT_VERBOSE"/>
 					<Add option="-DSCENE_VERBOSE"/>
 					<Add option="-DRENDERER_VERBOSE"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/include"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/src"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src"/>
-					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9"/>
-					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/x86_64-linux-gnu/c++/9"/>
-					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9/backward"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/llvm-10/lib/clang/10.0.0/include"/>
 					<Add directory="/usr/include/x86_64-linux-gnu"/>
 					<Add directory="/usr/include"/>
 				</Compiler>
@@ -62,21 +63,22 @@
 				<Option working_dir="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
-				<Option compiler="clang"/>
+				<Option compiler="gcc"/>
 				<Compiler>
 					<Add option="-D_GLFW_USE_CONFIG_H"/>
 					<Add option="-DOPENGL_DEMO=Scene with one object"/>
+					<Add option="-DGL_DEMO_DEBUG"/>
 					<Add option="-DKEY_INPUT_VERBOSE"/>
 					<Add option="-DSCENE_VERBOSE"/>
 					<Add option="-DRENDERER_VERBOSE"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/include"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/glfw-3.3.2/src"/>
 					<Add directory="/home/vito/repos/gd/opengl/opengl-good-intro/00-libs/linux-x11/libglfw/src"/>
-					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9"/>
-					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/x86_64-linux-gnu/c++/9"/>
-					<Add directory="/usr/bin/../lib/gcc/x86_64-linux-gnu/9/../../../../include/c++/9/backward"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/llvm-10/lib/clang/10.0.0/include"/>
 					<Add directory="/usr/include/x86_64-linux-gnu"/>
 					<Add directory="/usr/include"/>
 				</Compiler>

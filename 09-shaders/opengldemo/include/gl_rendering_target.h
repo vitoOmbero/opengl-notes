@@ -2,7 +2,9 @@
 #define MESH_DESCRIPTORS_H
 
 #include <cstddef>
+#include <string>
 
+#include <algorithm>
 #include <vector>
 
 #include <GL/glew.h>
@@ -11,81 +13,99 @@
 #include "attribute.h"
 #include "utils/gl_enum.h"
 
-enum class AttributeDataLayout : char
-{
-    kContiguous,
-    kInterleaved // <-- recommended
-};
 
-struct AttributeDataPack
+namespace gl_rendering_target
 {
-    const void*   data;
-    const GLsizei n_vertices;
-    const AttributeDataLayout layout;
-    const unsigned char       associated_vap_n;
-    ///> should be FALSE if data values ARE normilized
-    const bool is_NOT_data_normalized_flag{ false };
-    ///> in case if some VAP use the same ADP, but several (up to 8) do not use
-    /// idices (no need to dublicte ADP data structures). First from associated
-    /// VAPs flags is << 0, second: << 1, etc.
-    const unsigned char shared_adp__indices_usage_flags{ 0 };
-    const GLenum        indices_data_type{ 0 };
-    const GLsizei       indices_n{ 0 };
-    const char*         indices_data{ nullptr };
-};
+    enum class AttributeDataLayout : char
+    {
+        kContiguous,
+        kInterleaved // <-- recommended
+    };
 
-struct VertexAttributePack
-{
-    /// each attribute may have it's different type for data
-    ///> data type of attribute value as gl symbolic type description
-    GLenum data_type;
-    ///> number of bytes between two instances of the attribute pack
-    const GLsizei stride{ 0 };
-    ///> number of bytes between start position of vertex data pack
-    /// and start position of the attribute pack
-    const GLvoid* offset = nullptr;
-};
+    inline static const size_t kVertexAttributesGlMax = 16;
+    inline static const size_t kVertexAttributesEsMax = 8;
 
-// NOTE: All OpenGL ES 2.0 implementations must support a minimum of eight
-// vertex attributes.
-inline static const unsigned char kAttributesMax{ 8 };
-inline static const unsigned char kVapSchemeArrSize{ kAttributesMax + 5 };
-/**
- * @brief The VertexAttributeData struct Implicitly supports 1:N pack mapping
- */
-#pragma pack(push, 8)
-struct VertexAttributeData
-{
-    /**
-     * @brief The CompositionCase enum Explicit specification of data structure
-     * usage
-     */
+    struct VertexDataPointer
+    {
+        uint32_t rendering_target_id;
+        GLsizei  n_vertices;
+        void*    v_data;
+        GLsizei  n_indices;
+        GLenum   i_typecode;
+        void*    i_data;
+
+        VertexDataPointer() = default;
+        VertexDataPointer(uint32_t rendering_target_id, GLsizei n_vertices,
+                          void* v_data, GLsizei n_indices = 0, GLenum i_typecode = 0,
+                          void* i_data = nullptr)
+                : rendering_target_id{ rendering_target_id }
+                , n_vertices{ n_vertices }
+                , v_data{ v_data }
+                , n_indices{n_indices }
+                , i_typecode{ i_typecode }
+                , i_data{ i_data } {};
+    };
+
+    struct AttributePackSpecification
+    {
+        uint32_t            rendering_target_id;
+        GLenum              type_code;
+        GLvoid*             offset;
+        GLsizei             stride;
+        AttributeDataLayout layout;
+        attribute::Scheme   scheme;
+        bool                is_data_NOT_normalized;
+
+        AttributePackSpecification() = default;
+        AttributePackSpecification(uint32_t rendering_target_id, GLenum type_code,
+                                   AttributeDataLayout layout,
+                                   attribute::Scheme   scheme,
+                                   GLvoid* offset = nullptr, GLsizei stride = 0,
+                                   bool is_data_NOT_normalized = false)
+                : rendering_target_id{ rendering_target_id }
+                , type_code{type_code }
+                , offset{ offset }
+                , stride{ stride }
+                , layout{ layout }
+                , scheme{ scheme }
+                , is_data_NOT_normalized{ is_data_NOT_normalized } {};
+    };
+
+    struct RenderingTargetPackPointer
+    {
+        VertexDataPointer*          vdp;
+        AttributePackSpecification* aps;
+        size_t                      n_vdp;
+        size_t                      n_aps;
+    };
+
+    struct RenderingTargetPackFixed
+    {
+        VertexDataPointer          vdp[kVertexAttributesEsMax];
+        AttributePackSpecification aps[kVertexAttributesEsMax];
+    };
+
     enum class CompositionCase : unsigned char
     {
+        ///> rendering target is described with 1 adp and 1 vap
         k11,
+        ///> rendering target is described with 1 adp and N vap
         k1N,
+        ///> rendering target is described with M adp and N vap
+        kMn,
+        ///> several rendering targets
         kArr,
         kIllFormed
     };
 
-    const AttributeDataPack*   adp;
-    const VertexAttributePack* vap;
-    ///> schemas for packs
-    const attribute::Scheme vap_scheme[kVapSchemeArrSize];
-    // NOTE: next fields can be removed into the VertexAttributeData creation
-    // context, so vap_schemes can be [16]
-    const unsigned char   n_attribute_data_packs;
-    const unsigned char   n_vertex_attribute_packs;
-    const CompositionCase composition;
-};
-#pragma pack(pop)
+    size_t SizeOfVertexData(const RenderingTargetPackPointer rtpp, size_t index);
+    size_t SizeOfIndexData(const VertexDataPointer *const vdp);
 
-class GlRenderingTarget
-{
-public:
-private:
-};
-
-size_t SizeOfDataPack(const VertexAttributeData* vad, size_t index);
+    struct ShaderPack
+    {
+        std::string vertex_src;
+        std::string fragment_src;
+    };
+} // namespace gl_rendering_target
 
 #endif // MESH_DESCRIPTORS_H

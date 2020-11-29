@@ -26,6 +26,7 @@ set(COMMON_LIB_INCLUDE_DIRS
 
 set(SOURCES
     src/utils/terminal.cpp
+    src/utils/sequence_generator.cpp
     src/input_controller.cpp
     src/demo.cpp
     src/scene.cpp
@@ -45,6 +46,7 @@ SET(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL REQUIRED)
 
 if(DEBUG)
+    add_compile_definitions(GL_DEMO_DEBUG)
     if(VERBOSE_DEBUG)
         add_compile_definitions(KEY_INPUT_VERBOSE)
         add_compile_definitions(SCENE_VERBOSE)

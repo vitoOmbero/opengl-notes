@@ -11,31 +11,36 @@
 class Mesh
 {
 public:
-    Mesh(VertexAttributeData* vad, std::string vertex_shader_src,
-         std::string fragment_shader_src,
-         DrawingSpec descriptor = DrawingSpec::kStatic);
+    Mesh(gl_rendering_target::RenderingTargetPackPointer* rtpp_,
+         std::string vertex_shader_src, std::string fragment_shader_src,
+         DrawingSpec drawing_spec = DrawingSpec::kStatic);
 
     // NOTE: no, they won't be default all the time
     Mesh(const Mesh& another);
     Mesh& operator=(const Mesh& another);
-    Mesh(Mesh&& another);
-    Mesh& operator=(Mesh&& another);
+    Mesh(Mesh&& another) noexcept ;
+    Mesh& operator=(Mesh&& another) noexcept ;
 
-    DrawingSpec getDrawingSpec() const;
+    [[nodiscard]] DrawingSpec getDrawingSpec() const;
     void        setDescriptor(const DrawingSpec& descriptor);
 
-    std::string getFragmentShaderSrc() const;
+    [[nodiscard]] std::string getFragmentShaderSrc() const;
 
-    std::string getVertexShaderSrc() const;
+    [[nodiscard]] std::string getVertexShaderSrc() const;
 
-    VertexAttributeData const* getVertexAttributeData() const;
+    [[nodiscard]] gl_rendering_target::RenderingTargetPackPointer getRtpp() const;
+    void setRtpp(const gl_rendering_target::RenderingTargetPackPointer& value);
+
+    gl_rendering_target::ShaderPack getShaderPack() const;
+    void       setShaderPack(const gl_rendering_target::ShaderPack& shader_pack);
 
 private:
 #pragma pack(push, 4)
-    VertexAttributeData* vad_ = nullptr;
-    std::string          v_shader_src_;
+    gl_rendering_target::RenderingTargetPackPointer rtpp_;
+    std::string                                     v_shader_src_;
     std::string          f_shader_src_;
-    DrawingSpec          descriptor_;
+    DrawingSpec          drawing_spec_;
+    gl_rendering_target::ShaderPack                                      shader_pack_;
 #pragma pack(pop)
 };
 

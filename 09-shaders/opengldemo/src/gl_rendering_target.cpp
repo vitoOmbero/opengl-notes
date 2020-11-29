@@ -1,35 +1,45 @@
 #include "gl_rendering_target.h"
 
-size_t SizeOfDataPack(const VertexAttributeData* vad, size_t index)
+#include <algorithm>
+#include <numeric>
+
+#include "utils/terminal.h"
+
+size_t gl_rendering_target::SizeOfVertexData(
+        const gl_rendering_target::RenderingTargetPackPointer rtpp, size_t index)
 {
 
-    auto n_attributes = vad->n_vertex_attribute_packs;
+    auto vdp = rtpp.vdp[index];
 
-    auto n_datapacks = vad->n_attribute_data_packs;
+    std::vector<size_t> sz;
+    sz.reserve(rtpp.n_aps);
 
-    size_t result = 0;
-    if (n_datapacks == 1)
+    for (size_t i = 0; i < rtpp.n_aps; ++i)
     {
-        // interleaved
 
-        // TODO; move to VertexAttributeData?
+        AttributePackSpecification* r{nullptr};
 
-        for (size_t i = 0; i < n_attributes; ++i)
-        {
-            result +=
-                SizeOfGlTypeByGLenum(vad->vap[i].data_type) *
-                attribute::RuntimeMap::Get(vad->vap_scheme[i])->attributes_n;
+        for (size_t j=i; j < rtpp.n_aps; j++){
+            if (rtpp.aps[j].rendering_target_id == vdp.rendering_target_id){
+                r = &rtpp.aps[j];
+            }
         }
-    }
-    else
-    {
-        // contiguous
 
-        result +=
-            SizeOfGlTypeByGLenum(vad->vap[index].data_type) *
-            attribute::RuntimeMap::Get(vad->vap_scheme[index])->attributes_n;
-        ;
+        if (nullptr == r){
+            Terminal::ReportErr("Bad AttributePackSpecification!");
+        }
+
+        sz.emplace_back(SizeOfGlTypeByGLenum(r->type_code) *
+                        attribute::RuntimeMap::Get(r->scheme)->attributes_n);
     }
 
-    return result * vad->adp->n_vertices;
+    auto result = std::accumulate(sz.begin(), sz.end(), 0ul) * vdp.n_vertices;
+
+    return result;
+}
+
+size_t gl_rendering_target::SizeOfIndexData(
+        const VertexDataPointer *const vdp)
+{
+    return SizeOfGlTypeByGLenum(vdp->i_typecode) * vdp->n_indices;
 }
